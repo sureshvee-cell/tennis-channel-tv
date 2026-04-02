@@ -31,15 +31,15 @@ export default function MultiviewPage() {
   const layoutClass = `multiview-${layout}`;
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="flex h-screen bg-black overflow-hidden">
       <Navigation />
 
-      <main className="pt-16 h-screen flex flex-col">
+      <main className="flex-1 flex flex-col overflow-hidden">
         {/* Multiview Controls Bar */}
-        <div className="glass border-b border-tc-dark-300 px-6 py-3 flex items-center justify-between shrink-0">
+        <div className="glass border-b border-tc-teal-light px-6 py-3 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-4">
             <h2 className="text-white font-semibold text-sm">Multiview</h2>
-            <div className="h-4 w-px bg-tc-dark-400" />
+            <div className="h-4 w-px bg-tc-teal-light" />
 
             {/* Layout selector */}
             <div className="flex gap-2">
@@ -49,7 +49,6 @@ export default function MultiviewPage() {
                   data-focusable
                   onClick={() => {
                     setLayout(l);
-                    // Ensure enough matches selected
                     while (selectedMatches.length < l) {
                       const available = liveMatches.find(
                         (m) => !selectedMatches.includes(m.id)
@@ -60,8 +59,8 @@ export default function MultiviewPage() {
                   }}
                   className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all ${
                     layout === l
-                      ? "bg-tc-green text-white"
-                      : "bg-tc-dark-300 text-tc-gray hover:text-white"
+                      ? "bg-tc-orange text-white"
+                      : "bg-tc-teal-light text-tc-gray hover:text-white"
                   }`}
                 >
                   {l === 1 && (
@@ -106,8 +105,8 @@ export default function MultiviewPage() {
                   onClick={() => setAudioSource(i)}
                   className={`px-3 py-1 rounded text-xs font-medium transition-all ${
                     audioSource === i
-                      ? "bg-tc-green text-white"
-                      : "bg-tc-dark-300 text-tc-gray"
+                      ? "bg-tc-orange text-white"
+                      : "bg-tc-teal-light text-tc-gray"
                   }`}
                 >
                   Stream {i + 1}
@@ -122,7 +121,7 @@ export default function MultiviewPage() {
           {Array.from({ length: layout }).map((_, i) => {
             const match = getSelectedMatch(i);
             return (
-              <div key={i} className="relative bg-tc-dark-100 overflow-hidden">
+              <div key={i} className="relative bg-tc-teal overflow-hidden">
                 {match ? (
                   <>
                     <VideoPlayer
@@ -138,9 +137,9 @@ export default function MultiviewPage() {
                           {match.player1.name} vs {match.player2.name}
                         </span>
                         {audioSource === i && (
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="#00B140" stroke="none">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="#E8772E" stroke="none">
                             <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                            <path d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="#00B140" strokeWidth="2" fill="none" />
+                            <path d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="#E8772E" strokeWidth="2" fill="none" />
                           </svg>
                         )}
                       </div>
@@ -153,7 +152,7 @@ export default function MultiviewPage() {
                       setActiveSlot(i);
                       setShowPicker(true);
                     }}
-                    className="w-full h-full flex flex-col items-center justify-center text-tc-gray hover:text-tc-green transition-colors"
+                    className="w-full h-full flex flex-col items-center justify-center text-tc-gray hover:text-tc-orange transition-colors"
                   >
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                       <circle cx="12" cy="12" r="10" />
@@ -189,7 +188,7 @@ export default function MultiviewPage() {
         {/* Match Picker Overlay */}
         {showPicker && (
           <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center">
-            <div className="w-full max-w-2xl mx-auto p-8 animate-slide-up">
+            <div className="w-full max-w-2xl mx-auto p-8">
               <h3 className="text-xl font-bold text-white mb-6 text-center">
                 Select a Match for Stream {activeSlot + 1}
               </h3>
@@ -201,8 +200,8 @@ export default function MultiviewPage() {
                     onClick={() => handleMatchSelect(match.id)}
                     className={`p-4 rounded-xl border text-left flex items-center justify-between transition-all ${
                       selectedMatches.includes(match.id)
-                        ? "bg-tc-green/10 border-tc-green/50"
-                        : "bg-tc-dark-200 border-tc-dark-400 hover:border-tc-green/30"
+                        ? "bg-tc-orange/10 border-tc-orange/50"
+                        : "bg-tc-teal-light border-tc-teal-light hover:border-tc-orange/30"
                     }`}
                   >
                     <div className="flex items-center gap-4">
@@ -220,7 +219,7 @@ export default function MultiviewPage() {
                       </div>
                     </div>
                     {selectedMatches.includes(match.id) && (
-                      <span className="text-tc-green text-xs font-bold">ACTIVE</span>
+                      <span className="text-tc-orange text-xs font-bold">ACTIVE</span>
                     )}
                   </button>
                 ))}
@@ -228,7 +227,7 @@ export default function MultiviewPage() {
               <button
                 data-focusable
                 onClick={() => setShowPicker(false)}
-                className="w-full mt-4 py-3 rounded-xl bg-tc-dark-300 text-tc-gray font-medium hover:text-white transition-colors"
+                className="w-full mt-4 py-3 rounded-xl bg-tc-teal-light text-tc-gray font-medium hover:text-white transition-colors"
               >
                 Cancel
               </button>

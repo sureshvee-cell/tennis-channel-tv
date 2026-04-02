@@ -13,6 +13,7 @@ interface MatchCardProps {
 export default function MatchCard({ match, size = "medium", index = 0 }: MatchCardProps) {
   const isLive = match.status === "live";
   const isUpcoming = match.status === "upcoming";
+  const isCompleted = match.status === "completed";
 
   const entitlementBadge = () => {
     switch (match.entitlement) {
@@ -33,11 +34,19 @@ export default function MatchCard({ match, size = "medium", index = 0 }: MatchCa
     <Link
       href={`/player?matchId=${match.id}`}
       data-focusable
-      className={`block relative ${cardHeight} rounded-lg overflow-hidden bg-tc-teal-light group animate-fade-in border border-tc-teal-light hover:border-tc-orange transition-all`}
+      className={`block relative ${cardHeight} rounded-lg overflow-hidden bg-tc-teal-light group border border-tc-teal-light hover:border-tc-orange transition-all`}
       style={{ animationDelay: `${index * 80}ms` }}
     >
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-tc-teal-light via-tc-dark to-tc-teal" />
+      {/* Background Thumbnail Image */}
+      {match.thumbnailUrl && (
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-30 group-hover:opacity-40 transition-opacity"
+          style={{ backgroundImage: `url(${match.thumbnailUrl})` }}
+        />
+      )}
+
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-tc-teal via-tc-teal/80 to-tc-teal/40" />
 
       {/* Content */}
       <div className="relative z-10 h-full flex flex-col justify-between p-5">
@@ -60,6 +69,14 @@ export default function MatchCard({ match, size = "medium", index = 0 }: MatchCa
                 <span className="text-tc-orange text-xs font-bold">
                   {new Date(match.startTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                 </span>
+              </div>
+            )}
+            {isCompleted && (
+              <div className="flex items-center gap-1.5 bg-white/10 px-2.5 py-1 rounded-full">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#E8772E" strokeWidth="3">
+                  <polygon points="5 3 19 12 5 21 5 3" fill="#E8772E" />
+                </svg>
+                <span className="text-tc-orange text-xs font-bold">REPLAY</span>
               </div>
             )}
           </div>
@@ -137,7 +154,7 @@ export default function MatchCard({ match, size = "medium", index = 0 }: MatchCa
             {match.category === "fast-channel" ? "Channel" : match.category === "pickleball" ? "Pickleball" : match.category}
           </span>
           <div className="flex items-center gap-2 text-tc-orange text-xs font-medium opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
-            <span>{isUpcoming ? "Set Reminder" : "Watch Now"}</span>
+            <span>{isUpcoming ? "Set Reminder" : isCompleted ? "Watch Highlights" : "Watch Now"}</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <polygon points="5 3 19 12 5 21 5 3" fill="currentColor" />
             </svg>

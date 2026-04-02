@@ -9,6 +9,24 @@ interface TVProviderPickerProps {
   onCancel: () => void;
 }
 
+// Provider brand colors for visual variety
+const providerColors: Record<string, string> = {
+  comcast: "#E41B17",
+  directv: "#00A6E0",
+  dish: "#EC1C24",
+  spectrum: "#0066CC",
+  att: "#00A8E0",
+  verizon: "#CD040B",
+  cox: "#F36F21",
+  optimum: "#00205B",
+  frontier: "#FF0037",
+  mediacom: "#003DA5",
+  "youtube-tv": "#FF0000",
+  "hulu-live": "#1CE783",
+  fubo: "#C4032A",
+  sling: "#2F5BE7",
+};
+
 export default function TVProviderPicker({ onSuccess, onCancel }: TVProviderPickerProps) {
   const { signInWithCable, isLoading } = useAuth();
   const [selectedProvider, setSelectedProvider] = useState<string | null>(null);
@@ -24,10 +42,8 @@ export default function TVProviderPicker({ onSuccess, onCancel }: TVProviderPick
     setSelectedProvider(providerId);
     setAuthStep("authenticating");
 
-    // Simulate Adobe Primetime auth
     await new Promise((r) => setTimeout(r, 2500));
 
-    // Simulate success (or error for demo)
     const success = await signInWithCable(providerId);
     if (success) {
       setAuthStep("success");
@@ -42,9 +58,9 @@ export default function TVProviderPicker({ onSuccess, onCancel }: TVProviderPick
 
   if (authStep === "authenticating") {
     return (
-      <div className="fixed inset-0 z-50 bg-tc-dark/95 flex items-center justify-center">
-        <div className="text-center animate-fade-in">
-          <div className="w-16 h-16 border-4 border-tc-green/30 border-t-tc-green rounded-full animate-spin mx-auto mb-6" />
+      <div className="fixed inset-0 z-50 bg-tc-teal/95 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-tc-orange/30 border-t-tc-orange rounded-full animate-spin mx-auto mb-6" />
           <h3 className="text-xl font-semibold text-white mb-2">Verifying with your TV Provider</h3>
           <p className="text-tc-gray-light">
             Authenticating via Adobe Primetime...
@@ -59,10 +75,10 @@ export default function TVProviderPicker({ onSuccess, onCancel }: TVProviderPick
 
   if (authStep === "success") {
     return (
-      <div className="fixed inset-0 z-50 bg-tc-dark/95 flex items-center justify-center">
-        <div className="text-center animate-fade-in">
-          <div className="w-16 h-16 rounded-full bg-tc-green/20 flex items-center justify-center mx-auto mb-6">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#00B140" strokeWidth="3">
+      <div className="fixed inset-0 z-50 bg-tc-teal/95 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 rounded-full bg-tc-live/20 flex items-center justify-center mx-auto mb-6">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" strokeWidth="3">
               <polyline points="20 6 9 17 4 12" />
             </svg>
           </div>
@@ -75,8 +91,8 @@ export default function TVProviderPicker({ onSuccess, onCancel }: TVProviderPick
 
   if (authStep === "error") {
     return (
-      <div className="fixed inset-0 z-50 bg-tc-dark/95 flex items-center justify-center">
-        <div className="text-center animate-fade-in max-w-lg">
+      <div className="fixed inset-0 z-50 bg-tc-teal/95 flex items-center justify-center">
+        <div className="text-center max-w-lg">
           <div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mx-auto mb-6">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#E53935" strokeWidth="2">
               <circle cx="12" cy="12" r="10" />
@@ -91,14 +107,14 @@ export default function TVProviderPicker({ onSuccess, onCancel }: TVProviderPick
             <button
               data-focusable
               onClick={() => setAuthStep("select")}
-              className="px-6 py-3 rounded-full bg-tc-dark-300 text-white font-medium border border-tc-dark-400"
+              className="px-6 py-3 rounded-full bg-tc-teal-light text-white font-medium border border-tc-teal-light"
             >
               Try Another Provider
             </button>
             <button
               data-focusable
               onClick={onCancel}
-              className="px-6 py-3 rounded-full bg-tc-green text-white font-semibold"
+              className="px-6 py-3 rounded-full bg-tc-orange text-white font-semibold hover:bg-orange-600 transition-colors"
             >
               Subscribe Instead
             </button>
@@ -109,9 +125,15 @@ export default function TVProviderPicker({ onSuccess, onCancel }: TVProviderPick
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-tc-dark/95 flex items-center justify-center">
-      <div className="w-full max-w-3xl mx-auto p-8 animate-slide-up">
+    <div className="fixed inset-0 z-50 bg-tc-teal/95 flex items-center justify-center">
+      <div className="w-full max-w-3xl mx-auto p-8">
         <div className="text-center mb-8">
+          <div className="w-14 h-14 rounded-full bg-tc-orange/10 flex items-center justify-center mx-auto mb-4">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E8772E" strokeWidth="2">
+              <rect x="2" y="7" width="20" height="15" rx="2" ry="2" />
+              <polyline points="17 2 12 7 7 2" />
+            </svg>
+          </div>
           <h2 className="text-2xl font-bold text-white mb-2">Sign in with your TV Provider</h2>
           <p className="text-tc-gray-light">Select your cable or satellite provider to verify your subscription</p>
         </div>
@@ -135,7 +157,7 @@ export default function TVProviderPicker({ onSuccess, onCancel }: TVProviderPick
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search for your provider..."
-            className="w-full bg-tc-dark-200 border border-tc-dark-400 rounded-xl pl-12 pr-4 py-3.5 text-white placeholder:text-tc-gray focus:border-tc-green focus:outline-none transition-colors"
+            className="w-full bg-tc-teal-light border border-tc-teal-light rounded-xl pl-12 pr-4 py-3.5 text-white placeholder:text-tc-gray focus:border-tc-orange focus:outline-none transition-colors"
           />
         </div>
 
@@ -146,9 +168,12 @@ export default function TVProviderPicker({ onSuccess, onCancel }: TVProviderPick
               key={provider.id}
               data-focusable
               onClick={() => handleProviderSelect(provider.id)}
-              className="flex items-center gap-3 p-4 rounded-xl bg-tc-dark-200 border border-tc-dark-400 text-left hover:border-tc-green/50 transition-all"
+              className="flex items-center gap-3 p-4 rounded-xl bg-tc-teal-light border border-tc-teal-light text-left hover:border-tc-orange/50 transition-all"
             >
-              <div className="w-10 h-10 rounded-lg bg-tc-dark-300 flex items-center justify-center text-tc-gray-light font-bold text-sm shrink-0">
+              <div
+                className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold text-sm shrink-0"
+                style={{ backgroundColor: providerColors[provider.id] || "#E8772E" }}
+              >
                 {provider.name.charAt(0)}
               </div>
               <span className="text-white text-sm font-medium truncate">{provider.name}</span>

@@ -67,13 +67,13 @@ export default function OnScreenKeyboard({
   );
 
   return (
-    <div className="glass rounded-2xl p-6 max-w-2xl mx-auto animate-slide-up">
+    <div className="glass rounded-2xl p-6 max-w-2xl mx-auto">
       {/* Input display */}
-      <div className="bg-tc-dark-200 rounded-xl px-5 py-4 mb-5 border border-tc-dark-400">
+      <div className="bg-tc-teal rounded-xl px-5 py-4 mb-5 border border-tc-teal-light">
         <p className={`text-lg font-mono ${value ? "text-white" : "text-tc-gray"}`}>
           {value ? (isPassword ? "\u2022".repeat(value.length) : value) : placeholder}
         </p>
-        <div className="w-0.5 h-5 bg-tc-green inline-block animate-pulse ml-0.5" />
+        <div className="w-0.5 h-5 bg-tc-orange inline-block animate-pulse ml-0.5" />
       </div>
 
       {/* Keyboard rows */}
@@ -84,7 +84,7 @@ export default function OnScreenKeyboard({
               <button
                 data-focusable
                 onClick={() => handleKeyPress("Shift")}
-                className={`keyboard-key px-4 ${isUpperCase ? "!bg-tc-green" : ""}`}
+                className={`keyboard-key px-4 ${isUpperCase ? "!bg-tc-orange" : ""}`}
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M12 19V5M5 12l7-7 7 7" />
@@ -112,7 +112,7 @@ export default function OnScreenKeyboard({
               data-focusable
               onClick={() => handleKeyPress(key.label)}
               className={`keyboard-key ${key.width} ${
-                key.label === "Done" ? "!bg-tc-green font-semibold" : ""
+                key.label === "Done" ? "!bg-tc-orange font-semibold" : ""
               }`}
             >
               {key.label}
@@ -128,7 +128,7 @@ export default function OnScreenKeyboard({
           onClick={onClose}
           className="text-tc-gray text-sm hover:text-white transition-colors"
         >
-          Press <kbd className="px-1.5 py-0.5 bg-tc-dark-300 rounded text-xs">ESC</kbd> to close keyboard
+          Press <kbd className="px-1.5 py-0.5 bg-tc-teal-light rounded text-xs">ESC</kbd> to close keyboard
         </button>
       </div>
     </div>

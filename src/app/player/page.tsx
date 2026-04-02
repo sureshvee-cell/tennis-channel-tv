@@ -18,7 +18,6 @@ function PlayerContent() {
   const match = mockMatches.find((m) => m.id === matchId) || mockMatches[0];
 
   useEffect(() => {
-    // Check entitlement on mount
     if (!checkEntitlement(match.entitlement)) {
       setShowGate(true);
     } else {
@@ -58,7 +57,7 @@ function PlayerContent() {
       <a
         href="/"
         data-focusable
-        className="fixed top-5 right-5 z-40 w-10 h-10 rounded-full glass flex items-center justify-center text-white hover:bg-tc-dark-300 transition-colors"
+        className="fixed top-5 right-5 z-40 w-10 h-10 rounded-full glass flex items-center justify-center text-white hover:bg-tc-teal-light transition-colors"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <line x1="18" y1="6" x2="6" y2="18" />
@@ -74,7 +73,7 @@ export default function PlayerPage() {
     <Suspense
       fallback={
         <div className="w-screen h-screen bg-black flex items-center justify-center">
-          <div className="w-12 h-12 border-4 border-tc-green/30 border-t-tc-green rounded-full animate-spin" />
+          <div className="w-12 h-12 border-4 border-tc-orange/30 border-t-tc-orange rounded-full animate-spin" />
         </div>
       }
     >

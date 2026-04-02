@@ -90,8 +90,8 @@ export default function VideoPlayer({
   // Upcoming match screen
   if (isUpcoming) {
     return (
-      <div className="relative w-full h-full bg-tc-dark flex items-center justify-center">
-        <div className="text-center animate-fade-in">
+      <div className="relative w-full h-full bg-tc-teal flex items-center justify-center">
+        <div className="text-center">
           <div className="flex items-center justify-center gap-3 mb-6">
             <div className="w-3 h-3 rounded-full bg-yellow-500 animate-pulse" />
             <span className="text-yellow-400 text-lg font-semibold uppercase tracking-wider">Upcoming Match</span>
@@ -101,17 +101,19 @@ export default function VideoPlayer({
 
           <div className="flex items-center justify-center gap-16 mb-10">
             <div className="text-center">
-              <div className="w-20 h-20 rounded-full bg-tc-dark-300 flex items-center justify-center text-3xl mb-3 mx-auto">
+              <div className="w-20 h-20 rounded-full bg-tc-teal-light flex items-center justify-center text-3xl mb-3 mx-auto border-2 border-tc-orange/30">
                 {countryFlags[match.player1.countryCode] || "?"}
               </div>
               <p className="text-white font-semibold text-xl">{match.player1.name}</p>
+              {match.player1.seed && <p className="text-tc-orange text-sm">Seed #{match.player1.seed}</p>}
             </div>
             <span className="text-tc-gray text-3xl font-light">vs</span>
             <div className="text-center">
-              <div className="w-20 h-20 rounded-full bg-tc-dark-300 flex items-center justify-center text-3xl mb-3 mx-auto">
+              <div className="w-20 h-20 rounded-full bg-tc-teal-light flex items-center justify-center text-3xl mb-3 mx-auto border-2 border-tc-orange/30">
                 {countryFlags[match.player2.countryCode] || "?"}
               </div>
               <p className="text-white font-semibold text-xl">{match.player2.name}</p>
+              {match.player2.seed && <p className="text-tc-orange text-sm">Seed #{match.player2.seed}</p>}
             </div>
           </div>
 
@@ -120,7 +122,7 @@ export default function VideoPlayer({
           </p>
           <button
             data-focusable
-            className="mt-6 px-8 py-3 rounded-full bg-tc-dark-300 text-tc-green font-semibold text-base border border-tc-dark-400"
+            className="mt-6 px-8 py-3 rounded-full bg-tc-teal-light text-tc-orange font-semibold text-base border border-tc-teal-light hover:border-tc-orange transition-all"
           >
             Set Reminder
           </button>
@@ -156,20 +158,19 @@ export default function VideoPlayer({
         poster=""
       >
         <source src={match.streamUrl} type="application/x-mpegURL" />
-        {/* Fallback for browsers that don't support HLS natively */}
         <source src="https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" />
       </video>
 
       {/* Buffering indicator */}
       {buffering && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/40 z-20">
-          <div className="w-12 h-12 border-4 border-tc-green/30 border-t-tc-green rounded-full animate-spin" />
+          <div className="w-12 h-12 border-4 border-tc-orange/30 border-t-tc-orange rounded-full animate-spin" />
         </div>
       )}
 
       {/* Live Score Overlay (always visible, top-left) */}
       {!compact && match.isLive && match.sets.length > 0 && (
-        <div className="absolute top-5 left-5 z-30 glass rounded-lg px-4 py-3 animate-fade-in">
+        <div className="absolute top-5 left-5 z-30 glass rounded-lg px-4 py-3">
           <div className="flex items-center gap-2 mb-2">
             <div className="live-dot" />
             <span className="text-xs font-bold text-red-400 uppercase">{match.tournament}</span>
@@ -179,7 +180,7 @@ export default function VideoPlayer({
               <span className="text-tc-gray-light w-28 truncate">{match.player1.name}</span>
               <div className="flex gap-2">
                 {match.sets.map((set, i) => (
-                  <span key={i} className={`font-mono font-bold min-w-[1rem] text-center ${i === match.currentSet - 1 ? "text-tc-green" : "text-white"}`}>
+                  <span key={i} className={`font-mono font-bold min-w-[1rem] text-center ${i === match.currentSet - 1 ? "text-tc-orange" : "text-white"}`}>
                     {set.player1}
                   </span>
                 ))}
@@ -189,7 +190,7 @@ export default function VideoPlayer({
               <span className="text-tc-gray-light w-28 truncate">{match.player2.name}</span>
               <div className="flex gap-2">
                 {match.sets.map((set, i) => (
-                  <span key={i} className={`font-mono font-bold min-w-[1rem] text-center ${i === match.currentSet - 1 ? "text-tc-green" : "text-white"}`}>
+                  <span key={i} className={`font-mono font-bold min-w-[1rem] text-center ${i === match.currentSet - 1 ? "text-tc-orange" : "text-white"}`}>
                     {set.player2}
                   </span>
                 ))}
@@ -208,9 +209,9 @@ export default function VideoPlayer({
             {!spoilerMode && (
               <div className="flex items-center gap-3 mb-4">
                 <span className="text-xs text-tc-gray-light font-mono">{formatTime(currentTime)}</span>
-                <div className="flex-1 relative h-1 bg-tc-dark-400 rounded-full overflow-hidden">
+                <div className="flex-1 relative h-1 bg-tc-teal-light rounded-full overflow-hidden">
                   <div
-                    className="absolute top-0 left-0 h-full bg-tc-green rounded-full transition-all"
+                    className="absolute top-0 left-0 h-full bg-tc-orange rounded-full transition-all"
                     style={{ width: duration > 0 ? `${(currentTime / duration) * 100}%` : "0%" }}
                   />
                   {/* Live edge marker */}
@@ -314,7 +315,7 @@ export default function VideoPlayer({
                   data-focusable
                   onClick={() => setShowCaptions(!showCaptions)}
                   className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-                    showCaptions ? "bg-tc-green text-white" : "bg-white/10 text-white hover:bg-white/20"
+                    showCaptions ? "bg-tc-orange text-white" : "bg-white/10 text-white hover:bg-white/20"
                   }`}
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -328,7 +329,7 @@ export default function VideoPlayer({
                   data-focusable
                   onClick={() => setSpoilerMode(!spoilerMode)}
                   className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-                    spoilerMode ? "bg-tc-green text-white" : "bg-white/10 text-white hover:bg-white/20"
+                    spoilerMode ? "bg-tc-orange text-white" : "bg-white/10 text-white hover:bg-white/20"
                   }`}
                   title="Spoiler Mode - Hide progress bar"
                 >
@@ -358,7 +359,7 @@ export default function VideoPlayer({
       {/* End of Stream Screen */}
       {showEndScreen && (
         <div className="absolute inset-0 z-30 bg-black/90 flex items-center justify-center">
-          <div className="text-center animate-fade-in">
+          <div className="text-center">
             <h3 className="text-2xl font-bold text-white mb-2">Stream Ended</h3>
             <p className="text-tc-gray-light mb-8">
               {match.player1.name} vs {match.player2.name}
@@ -374,14 +375,14 @@ export default function VideoPlayer({
                     setIsPlaying(true);
                   }
                 }}
-                className="px-8 py-3 rounded-full bg-tc-green text-white font-semibold hover:bg-tc-green-dark transition-colors"
+                className="px-8 py-3 rounded-full bg-tc-orange text-white font-semibold hover:bg-orange-600 transition-colors"
               >
                 Replay
               </button>
               <a
                 href="/"
                 data-focusable
-                className="px-8 py-3 rounded-full bg-tc-dark-300 text-white font-semibold border border-tc-dark-400 hover:border-tc-gray transition-colors"
+                className="px-8 py-3 rounded-full bg-tc-teal-light text-white font-semibold border border-tc-teal-light hover:border-tc-gray transition-colors"
               >
                 Browse More
               </a>

@@ -25,7 +25,7 @@ export default function LiveRail({ title, subtitle, matches, showLiveBadge = fal
   return (
     <section className="mb-10 animate-slide-up">
       {/* Section Header */}
-      <div className="flex items-center justify-between px-8 mb-4">
+      <div className="flex items-center justify-between px-12 mb-4">
         <div className="flex items-center gap-3">
           {showLiveBadge && <div className="live-dot" />}
           <h2 className="text-tv-lg font-bold text-white">{title}</h2>
@@ -35,7 +35,7 @@ export default function LiveRail({ title, subtitle, matches, showLiveBadge = fal
           <button
             onClick={() => scroll("left")}
             data-focusable
-            className="w-10 h-10 rounded-full bg-tc-teal-light flex items-center justify-center text-tc-gray hover:text-tc-orange hover:bg-tc-teal-light/80 transition-all"
+            className="w-10 h-10 rounded-full bg-tc-dark-300 flex items-center justify-center text-tc-gray hover:text-white transition-colors"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <polyline points="15 18 9 12 15 6" />
@@ -44,7 +44,7 @@ export default function LiveRail({ title, subtitle, matches, showLiveBadge = fal
           <button
             onClick={() => scroll("right")}
             data-focusable
-            className="w-10 h-10 rounded-full bg-tc-teal-light flex items-center justify-center text-tc-gray hover:text-tc-orange hover:bg-tc-teal-light/80 transition-all"
+            className="w-10 h-10 rounded-full bg-tc-dark-300 flex items-center justify-center text-tc-gray hover:text-white transition-colors"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <polyline points="9 18 15 12 9 6" />
@@ -56,11 +56,11 @@ export default function LiveRail({ title, subtitle, matches, showLiveBadge = fal
       {/* Scrollable Rail */}
       <div
         ref={scrollRef}
-        className="flex gap-4 px-8 overflow-x-auto pb-2"
+        className="flex gap-5 px-12 overflow-x-auto pb-2"
         style={{ scrollbarWidth: "none" }}
       >
         {matches.map((match, i) => (
-          <div key={match.id} className="flex-shrink-0 w-[360px]">
+          <div key={match.id} className="flex-shrink-0 w-[420px]">
             <MatchCard match={match} size="medium" index={i} />
           </div>
         ))}
