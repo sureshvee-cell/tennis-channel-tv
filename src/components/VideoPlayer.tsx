@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import Hls from "hls.js";
 import { Match, countryFlags } from "@/data/mockData";
 
 interface VideoPlayerProps {
@@ -17,6 +18,7 @@ export default function VideoPlayer({
   showControls = true,
 }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const hlsRef = useRef<Hls | null>(null);
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(initialMuted);
@@ -27,10 +29,95 @@ export default function VideoPlayer({
   const [showCaptions, setShowCaptions] = useState(false);
   const [volume, setVolume] = useState(80);
   const [spoilerMode, setSpoilerMode] = useState(false);
-  const [buffering, setBuffering] = useState(false);
+  const [buffering, setBuffering] = useState(true);
   const [showEndScreen, setShowEndScreen] = useState(false);
+  const [streamReady, setStreamReady] = useState(false);
 
   const isUpcoming = match.status === "upcoming";
+
+  // Initialize HLS.js or native video playback
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || isUpcoming) return;
+
+    const streamUrl = match.streamUrl;
+    const fallbackUrl = match.fallbackUrl;
+
+    // Cleanup previous HLS instance
+    if (hlsRef.current) {
+      hlsRef.current.destroy();
+      hlsRef.current = null;
+    }
+
+    if (Hls.isSupported() && streamUrl.endsWith(".m3u8")) {
+      // Use HLS.js for browsers that don't natively support HLS
+      const hls = new Hls({
+        startLevel: -1, // auto quality
+        capLevelToPlayerSize: true,
+        maxBufferLength: 30,
+        maxMaxBufferLength: 60,
+      });
+      hlsRef.current = hls;
+
+      hls.loadSource(streamUrl);
+      hls.attachMedia(video);
+
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        setStreamReady(true);
+        setBuffering(false);
+        video.play().catch(() => {
+          // Autoplay blocked — mute and retry
+          video.muted = true;
+          setIsMuted(true);
+          video.play().catch(() => {});
+        });
+      });
+
+      hls.on(Hls.Events.ERROR, (_event, data) => {
+        if (data.fatal) {
+          // HLS stream failed — fall back to MP4
+          console.log("HLS error, falling back to MP4:", data.type);
+          hls.destroy();
+          hlsRef.current = null;
+          video.src = fallbackUrl;
+          video.load();
+          video.play().catch(() => {
+            video.muted = true;
+            setIsMuted(true);
+            video.play().catch(() => {});
+          });
+        }
+      });
+    } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+      // Native HLS support (Safari)
+      video.src = streamUrl;
+      video.addEventListener("loadedmetadata", () => {
+        setStreamReady(true);
+        setBuffering(false);
+        video.play().catch(() => {});
+      });
+    } else {
+      // No HLS support — use MP4 fallback directly
+      video.src = fallbackUrl;
+      video.load();
+      video.addEventListener("loadeddata", () => {
+        setStreamReady(true);
+        setBuffering(false);
+      });
+      video.play().catch(() => {
+        video.muted = true;
+        setIsMuted(true);
+        video.play().catch(() => {});
+      });
+    }
+
+    return () => {
+      if (hlsRef.current) {
+        hlsRef.current.destroy();
+        hlsRef.current = null;
+      }
+    };
+  }, [match.streamUrl, match.fallbackUrl, isUpcoming]);
 
   const hideControlsAfterDelay = useCallback(() => {
     if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
@@ -91,7 +178,16 @@ export default function VideoPlayer({
   if (isUpcoming) {
     return (
       <div className="relative w-full h-full bg-tc-teal flex items-center justify-center">
-        <div className="text-center">
+        {/* Background image */}
+        {match.thumbnailUrl && (
+          <div
+            className="absolute inset-0 bg-cover bg-center opacity-20"
+            style={{ backgroundImage: `url(${match.thumbnailUrl})` }}
+          />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-tc-teal via-tc-teal/80 to-tc-teal/60" />
+
+        <div className="relative z-10 text-center">
           <div className="flex items-center justify-center gap-3 mb-6">
             <div className="w-3 h-3 rounded-full bg-yellow-500 animate-pulse" />
             <span className="text-yellow-400 text-lg font-semibold uppercase tracking-wider">Upcoming Match</span>
@@ -144,7 +240,6 @@ export default function VideoPlayer({
       <video
         ref={videoRef}
         className="w-full h-full object-contain"
-        autoPlay
         muted={isMuted}
         playsInline
         onTimeUpdate={() => {
@@ -153,24 +248,43 @@ export default function VideoPlayer({
           setDuration(videoRef.current.duration || 0);
         }}
         onWaiting={() => setBuffering(true)}
-        onPlaying={() => setBuffering(false)}
+        onPlaying={() => {
+          setBuffering(false);
+          setIsPlaying(true);
+        }}
+        onPause={() => setIsPlaying(false)}
         onEnded={() => setShowEndScreen(true)}
-        poster=""
-      >
-        <source src={match.streamUrl} type="application/x-mpegURL" />
-        <source src="https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" />
-      </video>
+        poster={match.thumbnailUrl}
+      />
 
       {/* Buffering indicator */}
       {buffering && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/40 z-20">
-          <div className="w-12 h-12 border-4 border-tc-orange/30 border-t-tc-orange rounded-full animate-spin" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 z-20">
+          <div className="w-14 h-14 border-4 border-tc-orange/30 border-t-tc-orange rounded-full animate-spin mb-4" />
+          <p className="text-white text-sm font-medium">Loading stream...</p>
+          <p className="text-tc-gray text-xs mt-1">{match.tournament} &middot; {match.round}</p>
+        </div>
+      )}
+
+      {/* Match Info Banner (shows briefly at top) */}
+      {!compact && streamReady && (
+        <div className="absolute top-0 left-0 right-0 z-25 bg-gradient-to-b from-black/80 to-transparent px-6 py-4 pointer-events-none opacity-100 group-hover:opacity-100 transition-opacity">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className="text-white font-semibold text-sm">{match.tournament}</span>
+              <span className="text-tc-gray text-xs">{match.round}</span>
+              {match.court && <span className="text-tc-gray text-xs">&middot; {match.court}</span>}
+            </div>
+            <div className="flex items-center gap-2 text-xs text-tc-gray">
+              <span>Sample Content</span>
+            </div>
+          </div>
         </div>
       )}
 
       {/* Live Score Overlay (always visible, top-left) */}
       {!compact && match.isLive && match.sets.length > 0 && (
-        <div className="absolute top-5 left-5 z-30 glass rounded-lg px-4 py-3">
+        <div className="absolute top-14 left-5 z-30 glass rounded-lg px-4 py-3">
           <div className="flex items-center gap-2 mb-2">
             <div className="live-dot" />
             <span className="text-xs font-bold text-red-400 uppercase">{match.tournament}</span>
@@ -215,7 +329,7 @@ export default function VideoPlayer({
                     style={{ width: duration > 0 ? `${(currentTime / duration) * 100}%` : "0%" }}
                   />
                   {/* Live edge marker */}
-                  <div className="absolute top-0 right-0 h-full w-1 bg-red-500" />
+                  {match.isLive && <div className="absolute top-0 right-0 h-full w-1 bg-red-500" />}
                 </div>
                 <span className="text-xs text-tc-gray-light font-mono">{formatTime(duration)}</span>
               </div>

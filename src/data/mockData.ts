@@ -12,6 +12,7 @@ export interface Match {
   currentSet: number;
   isLive: boolean;
   streamUrl: string;
+  fallbackUrl: string;
   thumbnailUrl: string;
   category: "atp" | "wta" | "grand-slam" | "fast-channel" | "pickleball";
   entitlement: "free" | "subscription" | "cable" | "free-account";
@@ -79,6 +80,7 @@ export const mockMatches: Match[] = [
     currentSet: 2,
     isLive: true,
     streamUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+    fallbackUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
     thumbnailUrl: "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=640&h=360&fit=crop&q=80",
     category: "wta",
     entitlement: "subscription",
@@ -109,6 +111,7 @@ export const mockMatches: Match[] = [
     currentSet: 0,
     isLive: true,
     streamUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+    fallbackUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
     thumbnailUrl: "https://images.unsplash.com/photo-1511067007398-7e4b90cfa4bc?w=640&h=360&fit=crop&q=80",
     category: "fast-channel",
     entitlement: "free",
@@ -140,6 +143,7 @@ export const mockMatches: Match[] = [
     currentSet: 0,
     isLive: false,
     streamUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+    fallbackUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
     thumbnailUrl: "https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?w=640&h=360&fit=crop&q=80",
     category: "atp",
     entitlement: "subscription",
@@ -170,6 +174,7 @@ export const mockMatches: Match[] = [
     currentSet: 0,
     isLive: false,
     streamUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+    fallbackUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
     thumbnailUrl: "https://images.unsplash.com/photo-1587280501635-68a0e82cd5ff?w=640&h=360&fit=crop&q=80",
     category: "atp",
     entitlement: "subscription",
@@ -203,6 +208,7 @@ export const mockMatches: Match[] = [
     currentSet: 2,
     isLive: true,
     streamUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+    fallbackUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
     thumbnailUrl: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=640&h=360&fit=crop&q=80",
     category: "pickleball",
     entitlement: "free",
@@ -234,6 +240,7 @@ export const mockMatches: Match[] = [
     currentSet: 0,
     isLive: false,
     streamUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+    fallbackUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
     thumbnailUrl: "https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?w=640&h=360&fit=crop&q=80",
     category: "atp",
     entitlement: "subscription",
@@ -264,6 +271,7 @@ export const mockMatches: Match[] = [
     currentSet: 0,
     isLive: false,
     streamUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+    fallbackUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
     thumbnailUrl: "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=640&h=360&fit=crop&q=80",
     category: "wta",
     entitlement: "free",
@@ -294,6 +302,7 @@ export const mockMatches: Match[] = [
     currentSet: 0,
     isLive: false,
     streamUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+    fallbackUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
     thumbnailUrl: "https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?w=640&h=360&fit=crop&q=80",
     category: "wta",
     entitlement: "free",
@@ -324,6 +333,7 @@ export const mockMatches: Match[] = [
     currentSet: 0,
     isLive: false,
     streamUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+    fallbackUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4",
     thumbnailUrl: "https://images.unsplash.com/photo-1542144582-1ba00456b5e3?w=640&h=360&fit=crop&q=80",
     category: "wta",
     entitlement: "free",
