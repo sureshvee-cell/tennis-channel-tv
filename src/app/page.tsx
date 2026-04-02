@@ -36,9 +36,16 @@ export default function HomePage() {
             <h2 className="text-tv-lg font-bold text-white mb-4">Watch Live TV</h2>
             <div className="flex gap-4 overflow-x-auto pb-2" style={{ scrollbarWidth: "none" }}>
               {liveTVChannels.map((match, i) => (
-                <div key={match.id} className="flex-shrink-0 w-[360px] h-56 rounded-lg overflow-hidden bg-tc-teal-light border border-tc-teal-light hover:border-tc-orange transition-all group cursor-pointer relative">
+                <a key={match.id} href={`/player?matchId=${match.id}`} className="flex-shrink-0 w-[360px] h-56 rounded-lg overflow-hidden bg-tc-teal-light border border-tc-teal-light hover:border-tc-orange transition-all group cursor-pointer relative">
+                  {/* Background Thumbnail Image */}
+                  {match.thumbnailUrl && (
+                    <div
+                      className="absolute inset-0 bg-cover bg-center opacity-40 group-hover:opacity-50 transition-opacity"
+                      style={{ backgroundImage: `url(${match.thumbnailUrl})` }}
+                    />
+                  )}
                   {/* Channel Card */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-tc-teal-light to-tc-dark flex flex-col justify-between p-5">
+                  <div className="absolute inset-0 bg-gradient-to-t from-tc-teal via-tc-teal/70 to-tc-teal/30 flex flex-col justify-between p-5">
                     <div className="flex items-start justify-between">
                       <div>
                         <p className="text-tc-gray text-xs font-medium uppercase tracking-wider">{match.tournament}</p>
@@ -67,7 +74,7 @@ export default function HomePage() {
                       </div>
                     </div>
                   </div>
-                </div>
+                </a>
               ))}
             </div>
           </section>
