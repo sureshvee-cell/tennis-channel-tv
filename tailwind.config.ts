@@ -9,10 +9,18 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        "tc-green": {
-          DEFAULT: "#00B140",
-          dark: "#008C33",
-          light: "#33C466",
+        "tc-orange": {
+          DEFAULT: "#E8772E",
+          dark: "#D66B1A",
+          light: "#F49454",
+        },
+        "tc-teal": {
+          DEFAULT: "#0B1719",
+          light: "#1A2F33",
+        },
+        "tc-live": {
+          DEFAULT: "#4CAF50",
+          dark: "#388E3C",
         },
         "tc-dark": {
           DEFAULT: "#0A0A0A",
@@ -28,7 +36,7 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["Inter", "Helvetica Neue", "Arial", "sans-serif"],
+        sans: ["Poppins", "Arial", "sans-serif"],
       },
       fontSize: {
         "tv-xs": "0.875rem",

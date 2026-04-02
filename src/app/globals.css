@@ -3,9 +3,12 @@
 @tailwind utilities;
 
 :root {
-  --tc-green: #00B140;
-  --tc-green-dark: #008C33;
-  --tc-green-light: #33C466;
+  --tc-teal: #0B1719;
+  --tc-teal-light: #1A2F33;
+  --tc-orange: #E8772E;
+  --tc-orange-dark: #D66B1A;
+  --tc-orange-light: #F49454;
+  --tc-live: #4CAF50;
   --tc-dark: #0A0A0A;
   --tc-dark-100: #1A1A1A;
   --tc-dark-200: #222222;
@@ -13,7 +16,6 @@
   --tc-dark-400: #333333;
   --tc-gray: #888888;
   --tc-gray-light: #B0B0B0;
-  --tc-red-live: #E53935;
 }
 
 * {
@@ -28,9 +30,9 @@ html {
 }
 
 body {
-  background-color: var(--tc-dark);
+  background-color: var(--tc-teal);
   color: #ffffff;
-  font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+  font-family: "Poppins", Arial, sans-serif;
   overflow: hidden;
   width: 100vw;
   height: 100vh;
@@ -39,17 +41,25 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Main layout with sidebar */
+#__next {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  width: 100vw;
+}
+
 /* TV Focus System */
 [data-focusable] {
   outline: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
   border: 3px solid transparent;
 }
 
 [data-focusable]:focus,
 [data-focusable].tv-focused {
-  border-color: var(--tc-green);
-  box-shadow: 0 0 0 2px var(--tc-green), 0 8px 32px rgba(0, 177, 64, 0.3);
+  border-color: var(--tc-orange);
+  box-shadow: 0 0 0 2px var(--tc-orange), 0 8px 32px rgba(232, 119, 46, 0.3);
   transform: scale(1.03);
   z-index: 10;
 }
@@ -57,18 +67,18 @@ body {
 /* For buttons and smaller elements */
 button[data-focusable]:focus,
 button[data-focusable].tv-focused {
-  background-color: var(--tc-green);
+  background-color: var(--tc-orange);
   color: white;
-  border-color: var(--tc-green);
+  border-color: var(--tc-orange);
   transform: scale(1.05);
 }
 
-/* Live pulse dot */
+/* Live badge dot */
 .live-dot {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: var(--tc-red-live);
+  background: var(--tc-live);
   animation: pulseLive 1.5s ease-in-out infinite;
 }
 
@@ -79,7 +89,7 @@ button[data-focusable].tv-focused {
 
 /* Score styling */
 .score-current {
-  color: var(--tc-green);
+  color: var(--tc-orange);
   font-weight: 700;
 }
 
@@ -107,7 +117,7 @@ button[data-focusable].tv-focused {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: var(--tc-green);
+  background: var(--tc-orange);
   cursor: pointer;
 }
 
@@ -156,11 +166,11 @@ button[data-focusable].tv-focused {
 
 /* Gradient overlays */
 .gradient-bottom {
-  background: linear-gradient(to top, rgba(10, 10, 10, 0.95) 0%, rgba(10, 10, 10, 0.6) 50%, transparent 100%);
+  background: linear-gradient(to top, rgba(11, 23, 25, 0.95) 0%, rgba(11, 23, 25, 0.6) 50%, transparent 100%);
 }
 
 .gradient-right {
-  background: linear-gradient(to left, rgba(10, 10, 10, 0.8) 0%, transparent 100%);
+  background: linear-gradient(to left, rgba(11, 23, 25, 0.8) 0%, transparent 100%);
 }
 
 /* QR Code styling */
@@ -187,9 +197,9 @@ button[data-focusable].tv-focused {
 
 .keyboard-key:focus,
 .keyboard-key.tv-focused {
-  background: var(--tc-green);
+  background: var(--tc-orange);
   transform: scale(1.1);
-  box-shadow: 0 0 12px rgba(0, 177, 64, 0.4);
+  box-shadow: 0 0 12px rgba(232, 119, 46, 0.4);
 }
 
 /* Glassmorphism for overlays */
@@ -224,4 +234,56 @@ button[data-focusable].tv-focused {
   border-radius: 0.25rem;
   font-size: 0.75rem;
   margin: 0 0.15rem;
+}
+
+/* Sidebar nav styling */
+.sidebar-nav {
+  width: 70px;
+  background-color: var(--tc-teal);
+  border-right: 1px solid var(--tc-teal-light);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 0;
+  gap: 2rem;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.sidebar-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.sidebar-item {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  color: var(--tc-gray-light);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.sidebar-item:hover {
+  color: white;
+}
+
+.sidebar-item.active {
+  background-color: var(--tc-orange);
+  color: white;
+}
+
+/* Main content area */
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content::-webkit-scrollbar {
+  display: none;
 }

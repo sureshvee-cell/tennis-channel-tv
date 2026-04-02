@@ -1,109 +1,123 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { Match, countryFlags } from "@/data/mockData";
+import { Match } from "@/data/mockData";
 
-interface FeaturedMatchProps {
-  match: Match;
+interface HeroCarouselProps {
+  matches: Match[];
 }
 
-export default function FeaturedMatch({ match }: FeaturedMatchProps) {
+const heroMatches = [
+  {
+    id: "h1",
+    title: "Charleston Open Tennis 2026",
+    subtitle: "WTA 500 - Early Rounds LIVE",
+    status: "LIVE",
+    backgroundImage: "linear-gradient(135deg, rgba(232, 119, 46, 0.15) 0%, rgba(11, 23, 25, 0.8) 100%)",
+  },
+  {
+    id: "h2",
+    title: "Houston ATP 250",
+    subtitle: "March 30 - April 5, 2026",
+    status: "UPCOMING",
+    backgroundImage: "linear-gradient(135deg, rgba(76, 175, 80, 0.15) 0%, rgba(11, 23, 25, 0.8) 100%)",
+  },
+  {
+    id: "h3",
+    title: "ATP Marrakech & ATP Bucharest",
+    subtitle: "Live & Upcoming Matches",
+    status: "LIVE",
+    backgroundImage: "linear-gradient(135deg, rgba(232, 119, 46, 0.15) 0%, rgba(11, 23, 25, 0.8) 100%)",
+  },
+];
+
+export default function HeroCarousel() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % heroMatches.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + heroMatches.length) % heroMatches.length);
+  };
+
+  const goToSlide = (index: number) => {
+    setCurrentSlide(index);
+  };
+
   return (
-    <Link
-      href={`/player?matchId=${match.id}`}
-      data-focusable
-      className="block relative w-full h-[420px] rounded-2xl overflow-hidden bg-tc-dark-200 group"
-    >
-      {/* Background */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-green-900/40 via-tc-dark/80 to-tc-dark" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(0,177,64,0.15),transparent_60%)]" />
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10 h-full flex flex-col justify-between p-10">
-        {/* Top */}
-        <div className="flex items-start justify-between">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <div className="flex items-center gap-1.5 bg-red-600/20 px-3 py-1.5 rounded-full">
-                <div className="live-dot" />
-                <span className="text-red-400 text-sm font-bold uppercase">Live Now</span>
-              </div>
-              <span className="px-3 py-1.5 rounded-full bg-tc-dark-400/60 text-tc-gray-light text-sm">
-                {match.round}
-              </span>
-            </div>
-            <h2 className="text-3xl font-bold text-white">{match.tournament}</h2>
-            <p className="text-tc-gray-light text-base mt-1">{match.court}</p>
-          </div>
-          <div className="text-right">
-            <p className="text-tc-gray text-sm">Set {match.currentSet} of 5</p>
-          </div>
-        </div>
-
-        {/* Center: Player Matchup */}
-        <div className="flex items-center justify-center gap-16">
-          {/* Player 1 */}
-          <div className="text-center">
-            <div className="w-24 h-24 rounded-full bg-tc-dark-300 flex items-center justify-center text-4xl mb-3 mx-auto border-2 border-tc-dark-400">
-              {countryFlags[match.player1.countryCode] || "?"}
-            </div>
-            <h3 className="text-2xl font-bold text-white">{match.player1.name}</h3>
-            <p className="text-tc-gray text-sm mt-1">
-              {match.player1.country}
-              {match.player1.seed && ` | Seed #${match.player1.seed}`}
-            </p>
-          </div>
-
-          {/* Score */}
-          <div className="flex flex-col items-center gap-3">
-            <div className="flex gap-4">
-              {match.sets.map((set, i) => (
-                <div
-                  key={i}
-                  className={`flex flex-col items-center gap-1 ${
-                    i === match.currentSet - 1 ? "text-tc-green" : "text-tc-gray-light"
-                  }`}
-                >
-                  <span className="text-xs text-tc-gray uppercase">
-                    {i === match.currentSet - 1 ? "Current" : `Set ${i + 1}`}
-                  </span>
-                  <span className="text-3xl font-bold font-mono">{set.player1}</span>
-                  <div className="w-6 h-px bg-tc-dark-400" />
-                  <span className="text-3xl font-bold font-mono">{set.player2}</span>
+    <div className="relative w-full h-[420px] rounded-xl overflow-hidden bg-tc-teal-light group">
+      {/* Slides */}
+      {heroMatches.map((slide, index) => (
+        <div
+          key={slide.id}
+          className={`absolute inset-0 transition-opacity duration-500 ${
+            index === currentSlide ? "opacity-100" : "opacity-0"
+          }`}
+          style={{ background: slide.backgroundImage }}
+        >
+          {/* Content */}
+          <div className="relative z-10 h-full flex flex-col justify-between p-12">
+            <div className="flex items-start justify-between">
+              <div>
+                <div className="flex items-center gap-3 mb-4">
+                  {slide.status === "LIVE" && (
+                    <div className="flex items-center gap-2 bg-tc-live/20 px-3 py-1.5 rounded-full">
+                      <div className="live-dot" style={{ width: 8, height: 8 }} />
+                      <span className="text-tc-live text-sm font-bold uppercase">LIVE</span>
+                    </div>
+                  )}
+                  {slide.status === "UPCOMING" && (
+                    <div className="flex items-center gap-2 bg-tc-orange/20 px-3 py-1.5 rounded-full">
+                      <span className="text-tc-orange text-sm font-bold uppercase">UPCOMING</span>
+                    </div>
+                  )}
                 </div>
-              ))}
+                <h1 className="text-4xl font-bold text-white mb-2">{slide.title}</h1>
+                <p className="text-tc-gray-light text-lg">{slide.subtitle}</p>
+              </div>
+            </div>
+
+            {/* Bottom Navigation */}
+            <div className="flex items-center justify-between">
+              <div className="flex gap-2">
+                {heroMatches.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => goToSlide(i)}
+                    data-focusable
+                    className={`w-2 h-2 rounded-full transition-all ${
+                      i === currentSlide ? "bg-tc-orange w-8" : "bg-tc-gray-light"
+                    }`}
+                  />
+                ))}
+              </div>
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={prevSlide}
+                  data-focusable
+                  className="w-10 h-10 rounded-full bg-tc-dark-300/50 flex items-center justify-center text-white hover:bg-tc-orange transition-all"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="15 18 9 12 15 6" />
+                  </svg>
+                </button>
+                <button
+                  onClick={nextSlide}
+                  data-focusable
+                  className="w-10 h-10 rounded-full bg-tc-dark-300/50 flex items-center justify-center text-white hover:bg-tc-orange transition-all"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
-
-          {/* Player 2 */}
-          <div className="text-center">
-            <div className="w-24 h-24 rounded-full bg-tc-dark-300 flex items-center justify-center text-4xl mb-3 mx-auto border-2 border-tc-dark-400">
-              {countryFlags[match.player2.countryCode] || "?"}
-            </div>
-            <h3 className="text-2xl font-bold text-white">{match.player2.name}</h3>
-            <p className="text-tc-gray text-sm mt-1">
-              {match.player2.country}
-              {match.player2.seed && ` | Seed #${match.player2.seed}`}
-            </p>
-          </div>
         </div>
-
-        {/* Bottom */}
-        <div className="flex items-center justify-between">
-          <div className="nav-hint">
-            Press <kbd>Enter</kbd> to watch &middot; <kbd>&larr;</kbd><kbd>&rarr;</kbd> to browse
-          </div>
-          <div className="flex items-center gap-3 text-tc-green font-semibold text-lg opacity-80 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-              <polygon points="5 3 19 12 5 21 5 3" />
-            </svg>
-            Watch Now
-          </div>
-        </div>
-      </div>
-    </Link>
+      ))}
+    </div>
   );
 }
